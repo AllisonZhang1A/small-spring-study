@@ -14,8 +14,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
+
     @Override
-    public Object getBean(String beanName) throws BeansException{
+    public Object getBean(String beanName) throws BeansException {
         Object bean = getSingleton(beanName);//如果单例池里有就取出来
         if(bean != null){
             log.debug("Bean [{}] has been created", beanName);
@@ -26,7 +27,23 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         log.debug("Bean [{}] has not been created,创建bean", beanName);
         BeanDefinition beanDefinition = getBeanDefinition(beanName);
         //创建bean
-        Object newBean = createBean(beanName, beanDefinition);
+        Object newBean = createBean(beanName, beanDefinition,null);
+        return newBean;
+    }
+
+    @Override
+    public Object getBean(String beanName,Object...args) throws BeansException{
+        Object bean = getSingleton(beanName);//如果单例池里有就取出来
+        if(bean != null){
+            log.debug("Bean [{}] has been created", beanName);
+            return bean;
+        }
+        //如果单例池子里没有，那就说明这个 bean 还没有被创建过
+        // 这时就需要去“注册表”（通常是 beanDefinitionMap）中查找 bean 的定义信息（BeanDefinition），然后根据定义信息创建 bean 实例。
+        log.debug("Bean [{}] has not been created,创建bean", beanName);
+        BeanDefinition beanDefinition = getBeanDefinition(beanName);
+        //创建bean
+        Object newBean = createBean(beanName, beanDefinition,args);
         return newBean;
     }
 
@@ -45,5 +62,5 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      * @return
      * @throws BeansException
      */
-    protected abstract Object createBean(String beanName,BeanDefinition beanDefinition) throws BeansException;
+    protected abstract Object createBean(String beanName,BeanDefinition beanDefinition,Object[] args) throws BeansException;
 }

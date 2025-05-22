@@ -36,6 +36,11 @@
             <version>1.18.30</version> <!-- 或最新版本 -->
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.1</version>
+        </dependency>
     </dependencies>
 
 </project>
