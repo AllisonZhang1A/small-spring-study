@@ -23,6 +23,9 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
             
             if(null != ctor){
                 //1.如果有构造函数，就使用构造函数来实例化bean.把入参信息传递给 newInstance 进行实例化。
+                //getDeclaredConstructor() 方法可以获取到 Class 中所有的构造函数，
+                //ctor.getParameterTypes() 方法可以获取到构造函数的参数类型，
+                //newInstance() 方法可以实例化对象。
                 return clazz.getDeclaredConstructor(ctor.getParameterTypes()).newInstance(args);
             }else{
                 //2.如果没有构造函数，就使用无参构造函数来实例化bean

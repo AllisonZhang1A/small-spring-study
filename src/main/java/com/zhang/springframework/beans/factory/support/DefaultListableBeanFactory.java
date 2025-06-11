@@ -16,7 +16,12 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     private Map<String,BeanDefinition> beanDefinitionMap=new HashMap<>();
 
 
-
+    /**
+     * 重写父类的抽象方法,获取bean的定义
+     * @param beanName
+     * @return bean的定义
+     * @throws BeansException
+     */
     @Override
     protected BeanDefinition getBeanDefinition(String beanName) throws BeansException {
         BeanDefinition beanDefinition=beanDefinitionMap.get(beanName);
