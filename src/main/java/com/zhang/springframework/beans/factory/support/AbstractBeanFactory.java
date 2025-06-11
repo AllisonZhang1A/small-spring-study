@@ -17,26 +17,24 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
     @Override
     public Object getBean(String beanName) throws BeansException {
-        Object bean = getSingleton(beanName);//如果单例池里有就取出来
-        if(bean != null){
-            log.debug("Bean [{}] has been created", beanName);
-            return bean;
-        }
-        //如果单例池子里没有，那就说明这个 bean 还没有被创建过
-        // 这时就需要去“注册表”（通常是 beanDefinitionMap）中查找 bean 的定义信息（BeanDefinition），然后根据定义信息创建 bean 实例。
-        log.debug("Bean [{}] has not been created,创建bean", beanName);
-        BeanDefinition beanDefinition = getBeanDefinition(beanName);
-        //创建bean
-        Object newBean = createBean(beanName, beanDefinition,null);
-        return newBean;
+       return doGetBean(beanName,null);
     }
 
     @Override
     public Object getBean(String beanName,Object...args) throws BeansException{
+        return doGetBean(beanName,args);
+    }
+
+    @Override
+    public <T> T getBean(String name, Class<T> requiredType) throws BeansException {
+        return (T) getBean(name);
+    }
+
+    protected  <T> T doGetBean(String beanName, final Object[] args) {
         Object bean = getSingleton(beanName);//如果单例池里有就取出来
         if(bean != null){
             log.debug("Bean [{}] has been created", beanName);
-            return bean;
+            return (T) bean;
         }
         //如果单例池子里没有，那就说明这个 bean 还没有被创建过
         // 这时就需要去“注册表”（通常是 beanDefinitionMap）中查找 bean 的定义信息（BeanDefinition），然后根据定义信息创建 bean 实例。
@@ -44,7 +42,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         BeanDefinition beanDefinition = getBeanDefinition(beanName);
         //创建bean
         Object newBean = createBean(beanName, beanDefinition,args);
-        return newBean;
+        return (T) newBean;
     }
 
     /**
